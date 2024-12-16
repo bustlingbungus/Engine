@@ -98,11 +98,22 @@ std::vector<Collision> BoxCollider::GetCollisions()
 /* Adds parent objects to both collider sets */
 void BoxCollider::add_collision(BoxCollider *other, Vector2 p)
 {
-    // add objects to both collider sets
     Collision col = {other->obj, p};
-    collisions.emplace(other->obj, col);
-    col.other = obj;
-    other->collisions.emplace(obj, col);
+    auto it = collisions.find(other->obj);
+    if (it == collisions.end()) {
+        // engage collision behaviour
+        obj->OnCollisionEnter(col);
+        // add objects to both collider sets
+        collisions.emplace(other->obj, col);
+        col.other = obj;
+        other->collisions.emplace(obj, col);
+        other->obj->OnCollisionEnter(col);
+    } else {
+        // engage collision stay behaviour
+        obj->OnCollisionStay(col);
+        col.other = obj;
+        other->obj->OnCollisionStay(col);
+    }
 }
 
 /* Removes game objects from respective collider sets */
@@ -112,11 +123,13 @@ void BoxCollider::remove_collision(BoxCollider *other)
     auto it = collisions.find(other->obj);
     if (it != collisions.end()) {
         collisions.erase(it);
+        obj->OnCollisionExit(other->obj);
     }
 
     // remove self from other collider's set
     it = other->collisions.find(obj);
     if (it != other->collisions.end()) {
         other->collisions.erase(it);
+        other->obj->OnCollisionExit(obj);
     }
 }

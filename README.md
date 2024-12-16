@@ -65,6 +65,8 @@ Note that for `ObjectComponent`s, this is the only way they should be added to t
 
 Created objects and scenes should be made in the beginning of the `main` function, before the main window loop.
 
+The constructor for all `ObjectComponent`s use an `std::shared_ptr` to the parent object, meaning that objects cannot Add components to themselves, since the `this` keyword returns a raw pointer, not a `shared_ptr`. Therefore, game objects have a function `AssignComponents`, which should be called with a shared_ptr to the object itself. This function should be redefined in subclasses for an object to assign components to itself using its own shared_ptr. This is called by default in the `Instantiate` function.
+
 ### Camera
 
 This is an object that renders `TextureRenderer` components to the screen. It contains a rect representing the region on the screen it will be rendered to, as well as the position of the camera's origin in game space.
@@ -87,6 +89,15 @@ Detection is accomplished by adding itself to a global vector of `BoxCollider`s 
 
 Objects the collider is currently in collision with are stored in an `std::unordered_map` of `Collision` structs. To get these collisions from the collider as a vector, call `BoxCollider::GetCollisions()`.
 - `Collision` struct contains an `std::shared_ptr<GameObject>` to the parent of the other collider, and a `Vector2` to the point of collision.
+
+Upon first colliding with an object, the box collider will call `OnCollisionEnter` on its parent object.
+- `OnCollisionEnter` should be redefined in subclass definitions to actually do anything.
+
+Every frame the box collider remains in contact with an object, it will call `OnCollisionStay` on its parent object.
+- `OnCollisionStay` should be redefined in subclass definitions to actually do anything.
+
+On the frame a box collider stops colliding with a given collider, it will call `OnCollisionExit` on its parent object.
+- `OnCollisionExit` should be redefined in subclass definitions to actually do anything.
 
 ### Rigidbody
 

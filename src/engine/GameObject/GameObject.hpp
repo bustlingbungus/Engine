@@ -10,6 +10,9 @@
 
 using namespace Math;
 
+// forwards declaration
+struct Collision;
+
 /* Baseplate object in game space, contains a vector of components */
 class GameObject
 {
@@ -24,6 +27,8 @@ class GameObject
         virtual void SetEnabled(bool enable);
         virtual void SetPosition(Vector2 newPosition);
         virtual void SetScale(Vector2 newScale);
+
+        virtual void AssignComponents(std::shared_ptr<GameObject> self);
 
         void AddComponent(std::shared_ptr<GameObject> component);
 
@@ -86,6 +91,10 @@ class GameObject
         }
 
         void RemoveComponent(std::shared_ptr<GameObject> obj);
+
+        virtual void OnCollisionEnter(Collision collision);
+        virtual void OnCollisionStay(Collision collision);
+        virtual void OnCollisionExit(std::shared_ptr<GameObject> other);
 
         bool Enabled() const;
         Vector2 Position() const;

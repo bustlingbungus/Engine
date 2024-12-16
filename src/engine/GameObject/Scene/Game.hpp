@@ -42,6 +42,7 @@ class Game
             }
             // create the object
             auto obj = std::make_shared<T>(std::forward<Args>(args)...);
+            obj->AssignComponents(obj);
             // add object to current scene
             current_scene->AddComponent(obj);
             // return created object

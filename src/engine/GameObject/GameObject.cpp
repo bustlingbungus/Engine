@@ -1,4 +1,5 @@
 #include "GameObject.hpp"
+#include "Colliders/BoxCollider.hpp"
 #include <iostream>
 
 /*
@@ -71,6 +72,12 @@ void GameObject::SetScale(Vector2 newScale)
     }
 }
 
+/* Assigns components given a shared pointer to itself. Does nothing, shoudl be redefined in subclass definitiions. */
+void GameObject::AssignComponents(std::shared_ptr<GameObject> self)
+{
+
+}
+
 /* Adds a new component to the object. */
 void GameObject::AddComponent(std::shared_ptr<GameObject> component) {
     components.push_back(component);
@@ -87,6 +94,24 @@ void GameObject::RemoveComponent(std::shared_ptr<GameObject> obj)
             break;
         }
     }
+}
+
+/* Behaviour for first collision with an object. Redefine in subclass definitions */
+void GameObject::OnCollisionEnter(Collision collision)
+{
+
+}
+
+/* Behaviour for ongoing collision with an object. Redefine in subclass definitions */
+void GameObject::OnCollisionStay(Collision collision)
+{
+
+}
+
+/* Behaviour for breaking collision with an object. Redefine in subclass definitions */
+void GameObject::OnCollisionExit(std::shared_ptr<GameObject> other)
+{
+
 }
 
 /* Whether or not the object is currently active. */
