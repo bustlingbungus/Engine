@@ -12,5 +12,7 @@ class Scene : public GameObject
         Scene(std::string name);
         ~Scene();
 
+        virtual void Destroy();
+
         std::string name;
 };

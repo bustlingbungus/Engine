@@ -23,6 +23,13 @@ BoxCollider::BoxCollider(std::shared_ptr<GameObject> object, bool startEnabled)
 /* Remove self from global colliders vector */
 BoxCollider::~BoxCollider()
 {
+    Destroy();
+}
+
+/* Remove self from global colliders vector */
+void BoxCollider::Destroy()
+{
+    ObjectComponent::Destroy();
     colliderManager.RemoveCollider(this);
     collisions.clear();
 }

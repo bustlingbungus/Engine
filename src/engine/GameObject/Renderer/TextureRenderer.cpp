@@ -21,6 +21,13 @@ TextureRenderer::TextureRenderer(std::shared_ptr<GameObject> object, std::shared
 /* Removes the object from global TextureRenderers list */
 TextureRenderer::~TextureRenderer()
 {
+    Destroy();
+}
+
+/* Removes the object from global TextureRenderers list */
+void TextureRenderer::Destroy()
+{
+    ObjectComponent::Destroy();
     renderManager.RemoveRenderer(this);
     texture = nullptr;
 }

@@ -31,6 +31,12 @@ Rigidbody::Rigidbody(std::shared_ptr<GameObject> object, float mass, float frict
 
 Rigidbody::~Rigidbody()
 {
+    Destroy();
+}
+
+void Rigidbody::Destroy()
+{
+    ObjectComponent::Destroy();
     collider = nullptr;
 }
 

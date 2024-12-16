@@ -16,5 +16,10 @@ Scene::Scene(std::string name)
 
 Scene::~Scene()
 {
+    Destroy();
+}
 
+void Scene::Destroy()
+{
+    GameObject::Destroy();
 }

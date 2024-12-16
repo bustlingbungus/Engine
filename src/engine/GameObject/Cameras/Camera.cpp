@@ -2,6 +2,7 @@
 #include "../../GlobalWindow.hpp"
 #include "../Renderer/RenderManager.hpp"
 #include "../Renderer/TextureRenderer.hpp"
+#include <iostream>
 
 /*
  * Camera that renders all `TextureRenderer`s to an area on the screen.
@@ -20,7 +21,12 @@ Camera::Camera(Vector2 position, Vector2 scale, bool startEnabled)
 
 Camera::~Camera() 
 {
-    
+    Destroy();
+}
+
+void Camera::Destroy()
+{
+    GameObject::Destroy();
 }
 
 /* The region and position of the region viewed by the camera. */

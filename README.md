@@ -17,7 +17,7 @@ In general, a scene in the context of this API can be seen as the root of a tree
 - `Instantiate<T>(...)`: Creates and returns an `std::shared_ptr` to a GameObject of type `T`, and adds the object to the scene. 
   - This will only work when using arguments that are suitable for the constructor of class `T`, so be sure to check the constructor for the object you are trying to Instantiate
 
-- `Destroy(std::shared_ptr<GameObject>)`: Finds the specified object in the current scene, and removes it from the scene.
+- `DestroyObject(std::shared_ptr<GameObject>)`: Finds the specified object in the current scene, and removes it from the scene.
   - This will only work for objects that are the scene's child. i.e, objects that are part of the scene, and not a component or child of any other object. To remove those objects, remove them from their parent object.
 
 - `NewScene(std::string)`: Adds a new scene with the given name, if such a scene does not already exist. Note that the game will be initialised with one scene, which has a camera object.

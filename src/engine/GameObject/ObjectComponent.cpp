@@ -18,5 +18,11 @@ ObjectComponent::ObjectComponent(std::shared_ptr<GameObject> object, bool startE
 
 ObjectComponent::~ObjectComponent()
 {
+    Destroy();
+}
+
+void ObjectComponent::Destroy()
+{
+    GameObject::Destroy();
     obj = nullptr;
 }

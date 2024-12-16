@@ -10,6 +10,8 @@ class ObjectComponent : public GameObject
         ObjectComponent(std::shared_ptr<GameObject> object, bool startEnabled = true);
         ~ObjectComponent();
 
+        virtual void Destroy();
+
         /* Reference to the object the component modifies */
         std::shared_ptr<GameObject> obj;
 };

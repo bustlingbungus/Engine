@@ -13,6 +13,8 @@ class TextureRenderer : public ObjectComponent
         TextureRenderer(std::shared_ptr<GameObject> obj, std::shared_ptr<LTexture> texture, bool startEnabled = true);
         ~TextureRenderer();
 
+        virtual void Destroy();
+
         virtual void Update();
 
         virtual void Render(Camera *camera);

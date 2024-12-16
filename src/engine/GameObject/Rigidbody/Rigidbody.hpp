@@ -11,6 +11,8 @@ class Rigidbody : public ObjectComponent
         Rigidbody(std::shared_ptr<GameObject> object, float mass, float frictionCoefficient, Vector2 velocity = Vector2_Zero, bool isMoveable = true, bool hasGravity = true, bool startEnabled = true);
         ~Rigidbody();
 
+        virtual void Destroy();
+
         virtual void Update();
 
         virtual void OnCollision(Collision collision);

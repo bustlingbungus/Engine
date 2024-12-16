@@ -84,7 +84,7 @@ Game game = Game();
 
 
 /* Removes the object pointer from the current scene. */
-void Destroy(std::shared_ptr<GameObject> obj) {
+void DestroyObject(std::shared_ptr<GameObject> obj) {
     game.RemoveFromScene(obj);
 }
 

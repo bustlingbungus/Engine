@@ -21,6 +21,8 @@ class GameObject
         GameObject(Vector2 position = Vector2_Zero, Vector2 scale = Vector2_One, bool startEnabled = true);
         ~GameObject();
 
+        virtual void Destroy();
+
         virtual void Update();
         void UpdateComponents();
 

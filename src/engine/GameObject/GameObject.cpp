@@ -1,6 +1,5 @@
 #include "GameObject.hpp"
 #include "Colliders/BoxCollider.hpp"
-#include <iostream>
 
 /*
  * Baseplate object in game space, contains a vector of components.
@@ -17,22 +16,29 @@ GameObject::GameObject(Vector2 position, Vector2 scale, bool startEnabled)
 
 GameObject::~GameObject()
 {
+    Destroy();
+}
+
+/* Removes all components, and components' components */
+void GameObject::Destroy() {
+    for (auto& comp : components) comp->Destroy();
     components.clear();
 }
 
 /* Update's the game object. Does nothing by default, redefine in subclass definitions. */
 void GameObject::Update()
 {
-
+    
 }
 
 /* Calls `Update` for all object components. Calls `UpdateComponents` for all components as well. */
 void GameObject::UpdateComponents()
 {
     if (enabled) {
-        for (auto& component : components) {
-            component->Update();
-            component->UpdateComponents();
+        for (int i=0; i<components.size(); i++) {
+            auto comp = components[i];
+            if (comp!=nullptr && comp->Enabled()) comp->Update();
+            if (comp!=nullptr && comp->Enabled()) comp->UpdateComponents();
         }
     }
 }
@@ -90,6 +96,7 @@ void GameObject::RemoveComponent(std::shared_ptr<GameObject> obj)
     for (auto it = components.begin(); it != components.end(); it++) {
         // if the object is found, remove it and end the search
         if (*it == obj) {
+            (*it)->Destroy();
             components.erase(it);
             break;
         }

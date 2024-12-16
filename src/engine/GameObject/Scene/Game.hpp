@@ -110,7 +110,7 @@ std::shared_ptr<T> Instantiate(Args&&... args) {
     return game.AddToScene<T>(std::forward<Args>(args)...);
 }
 
-void Destroy(std::shared_ptr<GameObject> obj);
+void DestroyObject(std::shared_ptr<GameObject> obj);
 
 std::shared_ptr<Scene> NewScene(std::string sceneName);
 void RemoveScene(std::string sceneName);

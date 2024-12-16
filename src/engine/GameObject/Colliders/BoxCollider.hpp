@@ -24,6 +24,8 @@ class BoxCollider : public ObjectComponent
         BoxCollider(std::shared_ptr<GameObject> object, bool startEnabled = true);
         ~BoxCollider();
 
+        virtual void Destroy();
+
         virtual void Update();
 
         RectF GetBoundingBox() const;

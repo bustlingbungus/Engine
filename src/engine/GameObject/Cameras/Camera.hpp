@@ -10,6 +10,8 @@ class Camera : public GameObject
         Camera(Vector2 position, Vector2 scale = Vector2_One, bool startEnabled = true);
         ~Camera();
 
+        virtual void Destroy();
+
         virtual void Update();
 
         RectF camera() const;
