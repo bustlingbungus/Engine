@@ -20,12 +20,12 @@ int main()
 {
     /* INSTANTIATE OBJECTS */
     Vector2 pos = {200.0f, WND_HEIGHT*0.75f}, scale = {50.0f, 50.0f};
-    Vector2 vel(0.0f, -300.0f);
+    Vector2 vel(40.0f, -300.0f);
     auto tex = std::make_shared<LTexture>(gWindow);
     tex->solidColour({255,0,0,255});
     auto obj = Instantiate<GameObject>(pos, scale);
     auto rend = std::make_shared<TextureRenderer>(obj, tex);
-    auto rigid = std::make_shared<Rigidbody>(obj, 1.0f, vel);
+    auto rigid = std::make_shared<Rigidbody>(obj, 1.0f, 0.1f, vel);
     obj->AddComponent(rend);
     obj->AddComponent(rigid);
 
@@ -35,7 +35,7 @@ int main()
     tex = std::make_shared<LTexture>(gWindow);
     tex->solidColour({0,255,0,255});
     rend = std::make_shared<TextureRenderer>(obj2, tex);
-    rigid = std::make_shared<Rigidbody>(obj2, 1.0f, vel);
+    rigid = std::make_shared<Rigidbody>(obj2, 1.0f, 0.1f, vel);
     obj2->AddComponent(rend);
     obj2->AddComponent(rigid);
 
@@ -44,7 +44,7 @@ int main()
     tex = std::make_shared<LTexture>(gWindow);
     tex->solidColour({0,0,255,255});
     rend = std::make_shared<TextureRenderer>(floor, tex);
-    rigid = std::make_shared<Rigidbody>(floor, 1.0f, Vector2_Zero, false, false);
+    rigid = std::make_shared<Rigidbody>(floor, 1.0f, 0.025f, Vector2_Zero, false, false);
     floor->AddComponent(rend);
     floor->AddComponent(rigid);
 

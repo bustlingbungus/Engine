@@ -94,6 +94,7 @@ This is a component that will move its parent object around based on collisions 
 
 Rigidbodies contain the following components:
 - `mass` for elastic collision calculations. `(float)`
+- `friction_coeff` the coefficient of friction. Objects in collision with a rigidbody will have their velocity modifed to match this object's velocity, at a rate linearly proportional to the coefficient of friction. Set to `0.0f` to have no friction. `(float)`
 - `velocity` for elastic collision calculations, as well as for changing the position of it's parent every frame. `(Vector2)`
 - `acceleration` for changing the velocity vector every frame. `(Vector2)`
 - `collider` a pointer its parent's BoxCollider component, for collision detection. `(std::shared_ptr<BoxCollider>)`

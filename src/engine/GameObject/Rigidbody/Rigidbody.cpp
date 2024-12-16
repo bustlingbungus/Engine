@@ -10,14 +10,15 @@
  * 
  * \param object The object that the component is attached to.
  * \param mass The mass of the object.
+ * \param frictionCoefficient the coefficient of friction
  * \param velocity The object's starting velocity. `(0,0)` by default.
  * \param isMoveable Whether or not the object may be moved by other rigidbodies. `true` by default
  * \param hasGravity Whether or not the object is affected by gravity. `true` by default.
  * \param startEnabled Whether or not the component is active on creation. `true` by default.
  */
-Rigidbody::Rigidbody(std::shared_ptr<GameObject> object, float mass, Vector2 velocity, bool isMoveable, bool hasGravity, bool startEnabled)
+Rigidbody::Rigidbody(std::shared_ptr<GameObject> object, float mass, float frictionCoefficient, Vector2 velocity, bool isMoveable, bool hasGravity, bool startEnabled)
 : ObjectComponent(object, startEnabled), 
-  mass(mass), velocity(velocity), is_moveable(isMoveable), has_gravity(hasGravity)
+  mass(mass), velocity(velocity), is_moveable(isMoveable), has_gravity(hasGravity), friction_coeff(frictionCoefficient)
 {
     // get a reference to the object's box collider component
     collider = obj->GetComponent<BoxCollider>();
@@ -121,11 +122,21 @@ void Rigidbody::collision_on_y_axis(std::shared_ptr<Rigidbody> other, float dy)
         // find v2f relative to v1f
         float v2f = v1f + v2f_relative;
         velocity.y = v1f; other_vel.y = v2f;
+
+        // alter x velocities according to friction
+        float temp = other_vel.x;
+        other_vel.x = other_vel.x*(1.0f-friction_coeff) + velocity.x*(friction_coeff);
+        velocity.x = velocity.x*(1.0f-other->FrictionCoefficient()) + temp*other->FrictionCoefficient();
     }
     else {
-        // if an object is not moveable, just cancel their velocity
-        if (is_moveable) velocity.y = 0.0f;
-        else other_vel.y = 0.0f; 
+        // if an object is not moveable, just cancel their velocity and alter movement with friction
+        if (is_moveable) {
+            velocity.y = 0.0f;
+            velocity.x = velocity.x*(1.0f-other->FrictionCoefficient()) + other_vel.x*other->FrictionCoefficient();
+        } else {
+            other_vel.y = 0.0f;
+            other_vel.x = other_vel.x*(1.0f-friction_coeff) + velocity.x*(friction_coeff);
+        } 
     }
     other->SetVelocity(other_vel);
 }
@@ -166,11 +177,21 @@ void Rigidbody::collision_on_x_axis(std::shared_ptr<Rigidbody> other, float dx)
         // find v2f relative to v1f
         float v2f = v1f + v2f_relative;
         velocity.x = v1f; other_vel.x = v2f;
+
+        // alter y velocities according to friction
+        float temp = other_vel.y;
+        other_vel.y = other_vel.y*(1.0f-friction_coeff) + velocity.y*(friction_coeff);
+        velocity.y = velocity.y*(1.0f-other->FrictionCoefficient()) + temp*other->FrictionCoefficient();
     }
     else {
-        // if an object is not moveable, just cancel their velocity
-        if (is_moveable) velocity.x = 0.0f;
-        else other_vel.x = 0.0f; 
+        // if an object is not moveable, just cancel their velocity and alter movement with friction
+        if (is_moveable) {
+            velocity.x = 0.0f;
+            velocity.y = velocity.y*(1.0f-other->FrictionCoefficient()) + other_vel.y*other->FrictionCoefficient();
+        } else {
+            other_vel.x = 0.0f;
+            other_vel.y = other_vel.y*(1.0f-friction_coeff) + velocity.y*(friction_coeff);
+        }
     }
     other->SetVelocity(other_vel);
 }
@@ -179,6 +200,8 @@ void Rigidbody::collision_on_x_axis(std::shared_ptr<Rigidbody> other, float dx)
 std::shared_ptr<BoxCollider> Rigidbody::GetCollider() const { return collider; }
 /* The mass of the object. */
 float Rigidbody::Mass() const { return mass; }
+/* Coefficient of friction */
+float Rigidbody::FrictionCoefficient() const { return friction_coeff; }
 /* Whether or not the object may be moved by other rigidbodies. */
 bool Rigidbody::Moveable() const { return is_moveable; }
 /* Whether or not the object is affected by gravity. */
@@ -190,6 +213,8 @@ Vector2 Rigidbody::Acceleration() const { return acceleration; }
 
 /* Assign the rigidbody's mass */
 void Rigidbody::SetMass(float newMass) { mass = newMass; }
+/* Assign the object's friction coefficient */
+void Rigidbody::SetFrictionCoefficient(float frictionCoefficient) { friction_coeff = frictionCoefficient; }
 /* Set whether or not the object may be moved by other rigidbodies. */
 void Rigidbody::MakeMoveable(bool moveable) { is_moveable = moveable; }
 /* Assign object velocity */

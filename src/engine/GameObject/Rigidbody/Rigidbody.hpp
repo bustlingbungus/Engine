@@ -8,7 +8,7 @@ class Rigidbody : public ObjectComponent
 {
     public:
 
-        Rigidbody(std::shared_ptr<GameObject> object, float mass, Vector2 velocity = Vector2_Zero, bool isMoveable = true, bool hasGravity = true, bool startEnabled = true);
+        Rigidbody(std::shared_ptr<GameObject> object, float mass, float frictionCoefficient, Vector2 velocity = Vector2_Zero, bool isMoveable = true, bool hasGravity = true, bool startEnabled = true);
         ~Rigidbody();
 
         virtual void Update();
@@ -17,12 +17,14 @@ class Rigidbody : public ObjectComponent
 
         std::shared_ptr<BoxCollider> GetCollider() const;
         float Mass() const;
+        float FrictionCoefficient() const;
         bool Moveable() const;
         bool GravityEnabled() const;
         Vector2 Velocity() const;
         Vector2 Acceleration() const;
 
         void SetMass(float newMass);
+        void SetFrictionCoefficient(float frictionCoefficient);
         void MakeMoveable(bool moveable);
         void SetVelocity(Vector2 newVelocity);
         void SetAcceleration(Vector2 newAcceleration);
@@ -32,6 +34,8 @@ class Rigidbody : public ObjectComponent
 
         /* The mass of the object. */
         float mass;
+        /* Coefficient of friction */
+        float friction_coeff;
 
         /* Whether or not the object may be moved by other rigidbodies. */
         bool is_moveable;
