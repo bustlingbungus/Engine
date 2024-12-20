@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../sdl/LWindow.hpp"
+#include "sdl/LWindow.hpp"
 #include <memory>
 #include <string>
 

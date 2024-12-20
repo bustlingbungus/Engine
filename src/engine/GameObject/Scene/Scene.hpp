@@ -14,5 +14,8 @@ class Scene : public GameObject
 
         virtual void Destroy();
 
+        virtual void OnSceneEnter();
+        virtual void OnSceneExit();
+
         std::string name;
 };

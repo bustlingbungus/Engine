@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../math/VectorMath.hpp"
+#include "../../Math/VectorMath.hpp"
 
 using namespace Math;
 
@@ -14,3 +14,4 @@ struct PhysicsConstants {
 extern PhysicsConstants physicsConstants;
 
 void SetGravity(Vector2 newGravity);
+void SetRigidbodySeperation(float distance);

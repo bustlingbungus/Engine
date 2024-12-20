@@ -7,7 +7,7 @@ class Camera : public GameObject
 {
     public:
 
-        Camera(Vector2 position, Vector2 scale = Vector2_One, bool startEnabled = true);
+        Camera(Vector2 position, Vector2 scale = Vector2_One, float zoom = 1.0f, bool startEnabled = true);
         ~Camera();
 
         virtual void Destroy();
@@ -15,9 +15,13 @@ class Camera : public GameObject
         virtual void Update();
 
         RectF camera() const;
+        float Zoom() const;
+        void SetZoom(float newZoom);
         
     private:
 
         /* Position of the camera in game, and dimensions of the render region. */
         RectF cam;
+        /* How big/small the camera renders things. */
+        float zoom;
 };

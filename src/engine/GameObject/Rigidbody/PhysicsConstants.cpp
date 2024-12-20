@@ -7,3 +7,8 @@ PhysicsConstants physicsConstants = PhysicsConstants();
 void SetGravity(Vector2 newGravity) {
     physicsConstants.gravity = newGravity;
 }
+
+/* Set the distance put between two rigidbodies upon collision. */
+void SetRigidbodySeperation(float distance) {
+    physicsConstants.rigidbodySeperation = distance;
+}

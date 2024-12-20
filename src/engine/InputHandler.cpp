@@ -1,4 +1,6 @@
 #include "InputHandler.hpp"
+#include "GameObject/Scene/Game.hpp"
+#include "GameObject/Cameras/Camera.hpp"
 
 InputHandler inputHandler = InputHandler();
 
@@ -92,8 +94,23 @@ Vector2Int InputHandler::getMousePos() const
     return mouse_pos;
 }
 
-/* Returns the x/y coordinate of the mouse in the window */
-Vector2Int MousePosition() {
+/* Returns the x/y coordinate of the mouse in game */
+Vector2 MousePosition(std::shared_ptr<Camera> cam) 
+{
+    // get mouse camera on the window
+    Vector2 res = inputHandler.getMousePos(); 
+
+    // convert to game space based on camera, if possible
+    if (cam == nullptr) cam = GetObject<Camera>();
+    if (cam != nullptr) {
+        Vector2 cpos(cam->camera().x, cam->camera().y);
+        res += cpos;
+    }
+    return res;
+}
+
+/* Returns the x/y coordinates of the mouse in game */
+Vector2Int MouseWindowPosition() {
     return inputHandler.getMousePos();
 }
 

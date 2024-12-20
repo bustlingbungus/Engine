@@ -1,5 +1,11 @@
 #include "RenderManager.hpp"
 #include "TextureRenderer.hpp"
+#include <algorithm>
+
+bool RendererComp::operator()(TextureRenderer* a, TextureRenderer* b) {
+    return a->Z() < b->Z();
+}
+RendererComp comp;
 
 RenderManager::RenderManager()
 {
@@ -15,6 +21,7 @@ RenderManager::~RenderManager()
 void RenderManager::AddRenderer(TextureRenderer *renderer)
 {
     renderers.push_back(renderer);
+    std::sort(renderers.begin(), renderers.end(), comp);
 }
 
 /* 

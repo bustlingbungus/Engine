@@ -10,8 +10,7 @@ Scene::Scene(std::string name)
 : GameObject(), name(name)
 {
     // add a camera to the scene by default
-    auto cam = std::make_shared<Camera>(Vector2_Zero);
-    AddComponent(cam);
+    AddComponent<Camera>(Vector2_Zero);
 }
 
 Scene::~Scene()
@@ -22,4 +21,16 @@ Scene::~Scene()
 void Scene::Destroy()
 {
     GameObject::Destroy();
+}
+
+/* What happens when the scene is entered. Redefine in subclass definitions. */
+void Scene::OnSceneEnter()
+{
+
+}
+
+/* What happens when the scene is exited. Redefine in subclass definitions. */
+void Scene::OnSceneExit()
+{
+    
 }

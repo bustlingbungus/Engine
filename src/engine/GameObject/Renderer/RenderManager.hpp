@@ -6,6 +6,10 @@
 // forwards declaration
 class TextureRenderer;
 
+struct RendererComp {
+    bool operator()(TextureRenderer* a, TextureRenderer* b);
+};
+
 /* Stores all `TextureRenderer` components, to be used by camera objects when rendering. */
 class RenderManager
 {

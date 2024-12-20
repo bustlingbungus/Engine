@@ -2,6 +2,11 @@
 
 // include all engine headers 
 
+#include "sdl/LWindow.hpp"
+#include "sdl/LTexture.hpp"
+#include "sdl/LAudio.hpp"
+#include "sdl/LFont.hpp"
+
 #include "GlobalWindow.hpp"
 #include "InputHandler.hpp"
 #include "TimeTracker.hpp"
@@ -13,6 +18,7 @@
 
 #include "GameObject/Renderer/RenderManager.hpp"
 #include "GameObject/Renderer/TextureRenderer.hpp"
+#include "GameObject/Renderer/TextRenderer.hpp"
 
 #include "GameObject/Colliders/ColliderManager.hpp"
 #include "GameObject/Colliders/BoxCollider.hpp"

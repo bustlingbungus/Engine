@@ -84,11 +84,6 @@ void GameObject::AssignComponents(std::shared_ptr<GameObject> self)
 
 }
 
-/* Adds a new component to the object. */
-void GameObject::AddComponent(std::shared_ptr<GameObject> component) {
-    components.push_back(component);
-}
-
 /* Removes the specified object as a component of the game object */
 void GameObject::RemoveComponent(std::shared_ptr<GameObject> obj)
 {
@@ -101,6 +96,11 @@ void GameObject::RemoveComponent(std::shared_ptr<GameObject> obj)
             break;
         }
     }
+}
+
+/* Get all the objects components */
+std::vector<std::shared_ptr<GameObject>> GameObject::GetAllComponents() const {
+    return components;
 }
 
 /* Behaviour for first collision with an object. Redefine in subclass definitions */

@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "../../math/VectorMath.hpp"
+#include "../Math/VectorMath.hpp"
 
 #include <vector>
 #include <memory>
@@ -24,15 +24,30 @@ class GameObject
         virtual void Destroy();
 
         virtual void Update();
-        void UpdateComponents();
+        virtual void UpdateComponents();
 
         virtual void SetEnabled(bool enable);
         virtual void SetPosition(Vector2 newPosition);
         virtual void SetScale(Vector2 newScale);
 
         virtual void AssignComponents(std::shared_ptr<GameObject> self);
-
-        void AddComponent(std::shared_ptr<GameObject> component);
+        
+        /*
+         * Adds an component to theobject using the information provided.
+         *
+         * \returns A pointer to the component added.
+         * 
+         * \warning This function will fail if the arguments provided are not suitable for the
+         * desired type. Please read the documentation for class `T`.
+         */
+        template <class T, class... Args>
+        std::shared_ptr<T> AddComponent(Args&&... args)
+        {
+            auto comp = std::make_shared<T>(std::forward<Args>(args)...);
+            comp->AssignComponents(comp);
+            components.push_back(comp);
+            return comp;
+        }
 
         /* 
          * Removes the specified component type from the object. 
@@ -91,6 +106,8 @@ class GameObject
             }
             return res;
         }
+
+        std::vector<std::shared_ptr<GameObject>> GetAllComponents() const;
 
         void RemoveComponent(std::shared_ptr<GameObject> obj);
 

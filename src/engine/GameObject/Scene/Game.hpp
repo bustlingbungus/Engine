@@ -16,7 +16,46 @@ class Game
 
         void Update();
 
-        std::shared_ptr<Scene> AddScene(std::string sceneName);
+        /* 
+         * Creates a new scene with the given name and adds it to the game. 
+         * Does nothing if a scene with the given name already exists.
+         * 
+         * \param sceneName The name of the scene being added.
+         * \param enter Whether or not to enter the scene created.
+         * 
+         * \note This function only accepts a single string as a scene name, so please ensure that
+         * any scene subclass only requires a single string as a constructor argument.
+         * 
+         * \warning This function will fail if `T` is not a subclass of `Scene`. Be sure to only
+         * use this function to add `Scene` objects.
+         * 
+         * \returns a pointer to the created scene
+         */
+        template <class T>
+        std::shared_ptr<Scene> AddScene(std::string sceneName, bool enter = true)
+        {
+            // check if the scene already exists in the game
+            auto it = scenes.find(sceneName);
+            // the scene does not exist
+            if (it == scenes.end())
+            {
+                // create the scene object and add it to the hashmap
+                auto newScene = std::make_shared<T>(sceneName);
+                scenes.emplace(sceneName, newScene);
+                // if there is not a current scene, or if the user requests enter, 
+                // switch the current scene to the created scene
+                if (current_scene == nullptr || enter) {
+                    if (current_scene != nullptr) current_scene->OnSceneExit();
+                    current_scene = newScene;
+                    current_scene->OnSceneEnter();
+                }
+                // return created scene
+                return newScene;
+            }
+            // return the already existing scene
+            return it->second;
+        }
+
         void RemoveScene(std::string sceneName);
         void EnterScene(std::string sceneName);
 
@@ -40,14 +79,13 @@ class Game
                 std::cerr << "No existing scene!\n";
                 return nullptr;
             }
-            // create the object
-            auto obj = std::make_shared<T>(std::forward<Args>(args)...);
-            obj->AssignComponents(obj);
-            // add object to current scene
-            current_scene->AddComponent(obj);
             // return created object
-            return obj;
+            return current_scene->AddComponent<T>(std::forward<Args>(args)...);
         }
+
+        std::shared_ptr<Scene> GetCurrentScene() const;
+        std::shared_ptr<Scene> GetScene(std::string sceneName) const;
+        std::vector<std::shared_ptr<Scene>> GetScenes() const;
 
         /*
          * Returns a pointer to an object from the current scene whose type matches the one given.
@@ -87,7 +125,7 @@ class Game
         std::unordered_map<std::string,std::shared_ptr<Scene>> scenes;
 
         /* The scene currently being handled. */
-        std::shared_ptr<Scene> current_scene;
+        std::shared_ptr<Scene> current_scene = nullptr;
 };
 
 /* Global game object */
@@ -112,7 +150,26 @@ std::shared_ptr<T> Instantiate(Args&&... args) {
 
 void DestroyObject(std::shared_ptr<GameObject> obj);
 
-std::shared_ptr<Scene> NewScene(std::string sceneName);
+/* 
+ * Creates a new scene with the given name and adds it to the game. 
+ * Does nothing if a scene with the given name already exists.
+ * 
+ * \param sceneName The name of the scene being added.
+ * \param enter Whether or not to enter the scene created.
+ * 
+ * \note This function only accepts a single string as a scene name, so please ensure that
+ * any scene subclass only requires a single string as a constructor argument.
+ * 
+ * \warning This function will fail if `T` is not a subclass of `Scene`. Be sure to only
+ * use this function to add `Scene` objects.
+ * 
+ * \returns a pointer to the created scene
+ */
+template <class T>
+std::shared_ptr<Scene> NewScene(std::string sceneName, bool enter = true) {
+    return game.AddScene<T>(sceneName, enter);
+}
+
 void RemoveScene(std::string sceneName);
 
 void EnterScene(std::string sceneName);
@@ -136,3 +193,7 @@ template <typename T>
 std::vector<std::shared_ptr<T>> GetObjects() {
     return game.GetObjects<T>();
 }
+
+std::shared_ptr<Scene> GetCurrentScene();
+std::shared_ptr<Scene> GetScene(std::string sceneName);
+std::vector<std::shared_ptr<Scene>> GetScenes();

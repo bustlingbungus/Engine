@@ -1,6 +1,7 @@
 #include "TextureRenderer.hpp"
 #include "../Cameras/Camera.hpp"
 #include "RenderManager.hpp"
+#include "../../GlobalWindow.hpp"
 
 /*
  * Stores a texture to be rendered to all applicable cameras.
@@ -9,11 +10,13 @@
  * purposes. 
  *
  * \param object The game object the component is attached to 
- * \param texture The texture that will be rendered
+ * \param texture The texture that will be rendered.
+ * \param z Value used to determine which order objects are rendered in.
+ * \param renderRelative Whether or not the object is rendered relative to cameras, or on the window directly.
  * \param startEnabled Whether or not the component is active on creation. `true` by default.
  */
-TextureRenderer::TextureRenderer(std::shared_ptr<GameObject> object, std::shared_ptr<LTexture> texture, bool startEnabled)
-: ObjectComponent(object, startEnabled), texture(texture)
+TextureRenderer::TextureRenderer(std::shared_ptr<GameObject> object, std::shared_ptr<LTexture> texture, int z, bool renderRelative, bool startEnabled)
+: ObjectComponent(object, startEnabled), texture(texture), z(z), render_relative(renderRelative)
 {
     renderManager.AddRenderer(this);
 }
@@ -38,8 +41,8 @@ void TextureRenderer::Destroy()
  */
 void TextureRenderer::Update()
 {
-    Vector2Int scale = obj->Scale();
-    Vector2Int origin = obj->Position() - (scale/2);
+    Vector2 scale = obj->Scale();
+    Vector2 origin = obj->Position() - (scale/2.0f);
     rect = {origin.x,origin.y,scale.x,scale.y};
 }
 
@@ -50,13 +53,44 @@ void TextureRenderer::Render(Camera *camera)
     {
         // camera region
         RectF cam = camera->camera();
-        // outside of camera view, don't render
-        if (rect.x<cam.x-rect.w || rect.x>cam.x+cam.w ||
-            rect.y<cam.y-rect.h || rect.y>cam.y+cam.h) return;
-        
+
         // set up rect for rendering based on the camera's position
-        SDL_Rect rend_rect = {rect.x-(int)cam.x, rect.y-(int)cam.y, rect.w, rect.h};
+        Vector2 origin(rect.x, rect.y), dim(rect.w, rect.h);
+        // adjust for zoom
+        if (render_relative) 
+        {
+            float zoom = camera->Zoom();
+
+            Vector2 cp = camera->Position(), d = origin - cp;
+            origin = cp + (d * zoom);
+            dim *= zoom;
+            origin.x -= cam.x;
+            origin.y -= cam.y;
+        }
+
+        // create the rect
+        SDL_Rect rend_rect = {
+            int(origin.x), int(origin.y),
+            int(dim.x), int(dim.y)
+        };
+
+
+        // outside of camera view, don't render
+        if (rend_rect.x<-rend_rect.w || rend_rect.x>cam.w ||
+            rend_rect.y<-rend_rect.h || rend_rect.y>cam.h) return;
+
         // render the texture with respect to the rect
         texture->render(&rend_rect);
     }
+}
+
+/* Value used to determine which order objects are rendered in. */
+int TextureRenderer::Z() const { return z; }
+/* Set the value used to determine which order objects are rendered in. */
+void TextureRenderer::SetZ(int newZ) 
+{ 
+    z = newZ; 
+    // remove and reinsert self to global map, to update the sorted order
+    renderManager.RemoveRenderer(this);
+    renderManager.AddRenderer(this);
 }

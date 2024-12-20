@@ -24,8 +24,7 @@ Rigidbody::Rigidbody(std::shared_ptr<GameObject> object, float mass, float frict
     collider = obj->GetComponent<BoxCollider>();
     // if the object has no box collider, add one
     if (collider == nullptr) {
-        collider = std::make_shared<BoxCollider>(obj, startEnabled);
-        obj->AddComponent(collider);
+        collider = obj->AddComponent<BoxCollider>(obj, startEnabled);
     }
 }
 
@@ -72,23 +71,26 @@ void Rigidbody::OnCollision(Collision collision)
     // valid collision, proceed with collision behaviour
     if (other != nullptr && other->Enabled())
     {
-        // get other required components form object 
-        auto other_collider = other->GetCollider();
-        RectF other_bbox = other_collider->GetBoundingBox();
+        if (is_moveable || other->Moveable())
+        {
+            // get other required components form object 
+            auto other_collider = other->GetCollider();
+            RectF other_bbox = other_collider->GetBoundingBox();
 
-        // find the displacement between the point and the bounding box's centre
-        Vector2 disp = collision.other->Position() - collision.point;
-        // find the magnitude of this displacement along both axes
-        float dx = (other_bbox.w/2.0f) - abs(disp.x);
-        float dy = (other_bbox.h/2.0f) - abs(disp.y);
+            // find the displacement between the point and the bounding box's centre
+            Vector2 disp = collision.other->Position() - collision.point;
+            // find the magnitude of this displacement along both axes
+            float dx = (other_bbox.w/2.0f) - abs(disp.x);
+            float dy = (other_bbox.h/2.0f) - abs(disp.y);
 
-        // move the objects orthogonally along the axis with the least displacement
-        if (dy<dx && dy>=0.0f) collision_on_y_axis(other, 
-            (dy+physicsConstants.rigidbodySeperation) * sign(disp.y)
-        );
-        else if (dx>=0.0f && dy>=0.0f) collision_on_x_axis(other, 
-            (dx+physicsConstants.rigidbodySeperation) * sign(disp.x)
-        );
+            // move the objects orthogonally along the axis with the least displacement
+            if (dy<dx && dy>=0.0f) collision_on_y_axis(other, 
+                (dy+physicsConstants.rigidbodySeperation) * sign(disp.y)
+            );
+            else if (dx>=0.0f && dy>=0.0f) collision_on_x_axis(other, 
+                (dx+physicsConstants.rigidbodySeperation) * sign(disp.x)
+            );
+        }
     }
 }
 
@@ -216,6 +218,8 @@ bool Rigidbody::GravityEnabled() const { return has_gravity; }
 Vector2 Rigidbody::Velocity() const { return velocity; }
 /* Rate of change of velocity */
 Vector2 Rigidbody::Acceleration() const { return acceleration; }
+/* The collider object that the rigidbody's parent uses for collision detection. */
+std::shared_ptr<BoxCollider> Rigidbody::Collider() const { return collider; }
 
 /* Assign the rigidbody's mass */
 void Rigidbody::SetMass(float newMass) { mass = newMass; }

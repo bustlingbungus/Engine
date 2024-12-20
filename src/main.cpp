@@ -6,10 +6,6 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
-#include "sdl/LWindow.hpp"
-#include "sdl/LTexture.hpp"
-#include "sdl/LAudio.hpp"
-
 #include "engine/BungusEngine.hpp"
 
 // std
@@ -19,34 +15,34 @@
 int main()
 {
     /* INSTANTIATE OBJECTS */
-    Vector2 pos = {200.0f, WND_HEIGHT*0.75f}, scale = {50.0f, 50.0f};
-    Vector2 vel(40.0f, -300.0f);
+    auto obj = Instantiate<GameObject>(
+        Vector2(-440.0f, 180.0f), 
+        Vector2(50.0f, 50.0f)
+    );
     auto tex = std::make_shared<LTexture>(gWindow);
     tex->solidColour({255,0,0,255});
-    auto obj = Instantiate<GameObject>(pos, scale);
-    auto rend = std::make_shared<TextureRenderer>(obj, tex);
-    auto rigid = std::make_shared<Rigidbody>(obj, 1.0f, 0.1f, vel);
-    obj->AddComponent(rend);
-    obj->AddComponent(rigid);
+    obj->AddComponent<TextureRenderer>(obj, tex);
+    obj->AddComponent<Rigidbody>(obj, 1.0f, 0.1f, Vector2(40.0f, -300.0f));
 
-    pos = {205.0f, WND_HEIGHT * 0.5f};
-    vel = Vector2(0.0f, 0.0f);
-    auto obj2 = Instantiate<GameObject>(pos, scale);
+
+    auto obj2 = Instantiate<GameObject>(
+        Vector2(-435.0f, 0.0f), 
+        Vector2(50.0f, 50.0f)       
+    );
     tex = std::make_shared<LTexture>(gWindow);
     tex->solidColour({0,255,0,255});
-    rend = std::make_shared<TextureRenderer>(obj2, tex);
-    rigid = std::make_shared<Rigidbody>(obj2, 1.0f, 0.1f, vel);
-    obj2->AddComponent(rend);
-    obj2->AddComponent(rigid);
+    obj2->AddComponent<TextureRenderer>(obj2, tex);
+    obj2->AddComponent<Rigidbody>(obj2, 1.0f, 0.1f, Vector2_Zero);
 
-    pos = {WND_WIDTH/2, WND_HEIGHT}; scale = {WND_WIDTH, 50.0f};
-    auto floor = Instantiate<GameObject>(pos, scale);
+
+    auto floor = Instantiate<GameObject>(
+        Vector2(0.0f, 360.0f), 
+        Vector2(1280.0f, 50.0f)
+    );
     tex = std::make_shared<LTexture>(gWindow);
     tex->solidColour({0,0,255,255});
-    rend = std::make_shared<TextureRenderer>(floor, tex);
-    rigid = std::make_shared<Rigidbody>(floor, 1.0f, 0.025f, Vector2_Zero, false, false);
-    floor->AddComponent(rend);
-    floor->AddComponent(rigid);
+    floor->AddComponent<TextureRenderer>(floor, tex);
+    floor->AddComponent<Rigidbody>(floor, 1.0f, 0.025f, Vector2_Zero, false, false);
 
 
     SDL_Event e;

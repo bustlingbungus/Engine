@@ -1,10 +1,11 @@
 #pragma once
 
 #include <SDL.h>
-#include "../math/VectorMath.hpp"
+#include "Math/VectorMath.hpp"
 
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 using namespace Math;
 
@@ -158,5 +159,8 @@ class InputHandler
 
 extern InputHandler inputHandler;
 
-Vector2Int MousePosition();
+// forwards declaration
+class Camera;
+Vector2 MousePosition(std::shared_ptr<Camera> cam = nullptr);
+Vector2Int MouseWindowPosition();
 bool InputActive(int input);

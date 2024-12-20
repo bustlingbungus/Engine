@@ -24,6 +24,7 @@ class Rigidbody : public ObjectComponent
         bool GravityEnabled() const;
         Vector2 Velocity() const;
         Vector2 Acceleration() const;
+        std::shared_ptr<BoxCollider> Collider() const;
 
         void SetMass(float newMass);
         void SetFrictionCoefficient(float frictionCoefficient);
