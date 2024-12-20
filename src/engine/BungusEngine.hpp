@@ -28,3 +28,6 @@
 
 #include "GameObject/Scene/Game.hpp"
 #include "GameObject/Scene/Scene.hpp"
+
+// std
+#include <bits/stdc++.h>
