@@ -50,6 +50,7 @@ void Camera::Update()
     for (auto& renderer : renderManager.renderers) {
         // if the renderer is enabled, render it with reference to this camera 
         if (renderer->Enabled()) {
+            renderer->Update();
             renderer->Render(this);
         }
     }
