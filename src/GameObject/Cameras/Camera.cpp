@@ -16,7 +16,7 @@ Camera::Camera(Vector2 position, Vector2 scale, float zoom, bool startEnabled)
 : GameObject(position, scale, startEnabled), zoom(zoom)
 {
     // set up the in game rect for the camera
-    Vector2 view = scale & Vector2(gWindow->getWidth(), gWindow->getHeight()); // hadamard product
+    Vector2 view = scale & GetWindowResolution(); // hadamard product
     Vector2 origin = position-(view/2.0f);
     cam = {origin.x, origin.y, view.x, view.y};
 }
@@ -42,7 +42,7 @@ void Camera::SetZoom(float newZoom) { zoom = newZoom; }
 void Camera::Update()
 {
     // centre camera rect on object position
-    Vector2 view = Scale() & Vector2(gWindow->getWidth(), gWindow->getHeight()), 
+    Vector2 view = Scale() & GetWindowResolution(), 
             origin = Position()-(view/2.0f);
     cam = {origin.x, origin.y, view.x, view.y};
 

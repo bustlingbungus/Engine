@@ -1,6 +1,7 @@
 #include "InputHandler.hpp"
 #include "GameObject/Scene/Game.hpp"
 #include "GameObject/Cameras/Camera.hpp"
+#include "GlobalWindow.hpp"
 
 // initalise global input handler
 InputHandler inputHandler = InputHandler();
@@ -156,7 +157,8 @@ Vector2 MousePosition(std::shared_ptr<Camera> cam)
 
 /* Returns the x/y coordinates of the mouse in the window */
 Vector2Int MouseWindowPosition() {
-    return inputHandler.getMousePos();
+    Vector2 sc(gWindow->getScaleX(), gWindow->getScaleY());
+    return (Vector2)inputHandler.getMousePos()|sc;
 }
 
 /*

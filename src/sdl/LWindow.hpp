@@ -42,6 +42,9 @@ public:
   /* toggles fullscreen */
   bool toggleFullscreen();
 
+  /* changes window dimensions */
+  void setDimensions(int width, int height, bool maintainResolution = false);
+
   /* Initialises variables */
   LWindow(int width = 1280, int height = 720, std::string name = "Window");
 
@@ -62,6 +65,7 @@ private:
   /* Scaling factor */
   float scaleX = 1.0f;
   float scaleY = 1.0f;
+  bool rescale = false;
 
   /* Window focus */
   bool wMouseFocus;

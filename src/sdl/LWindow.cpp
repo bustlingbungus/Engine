@@ -102,13 +102,17 @@ void LWindow::handleEvent(SDL_Event &e)
     // Get new dimensions and repaint on window size change
     case SDL_WINDOWEVENT_SIZE_CHANGED:
     {
+      if (rescale) {
+        // change scaling factor
+        scaleX = (float)e.window.data1 / (float)wWidth; 
+        scaleY = (float)e.window.data2 / (float)wHeight;
+        SDL_RenderSetScale(gRenderer, scaleX, scaleY);
+        SDL_RenderPresent(gRenderer);
+        rescale = false;
+      }
+
       wWidth = e.window.data1;
       wHeight = e.window.data2;
-      // change scaling factor
-      scaleX = (float)wWidth / 1024.0f; scaleY = (float)wHeight / 1024.0f;
-      scaleX = scaleY = (scaleX < scaleY)? scaleX : scaleY;
-      SDL_RenderSetScale(gRenderer, scaleX, scaleY);
-      SDL_RenderPresent(gRenderer);
       break;
     }
 
@@ -157,18 +161,25 @@ void LWindow::handleEvent(SDL_Event &e)
 
 bool LWindow::toggleFullscreen()
 {
+  rescale = true;
   if (wFullScreen)
-    {
-      SDL_SetWindowFullscreen(gWindow, 0);
-      wFullScreen = false;
-    }
-    else
-    {
-      SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
-      wFullScreen = true;
-      wMinimized = false;
-    }
-    return wFullScreen;
+  {
+    SDL_SetWindowFullscreen(gWindow, 0);
+    wFullScreen = false;
+  }
+  else
+  {
+    SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    wFullScreen = true;
+    wMinimized = false;
+  }
+  return wFullScreen;
+}
+
+void LWindow::setDimensions(int width, int height, bool maintainResolution)
+{
+  rescale = maintainResolution;
+  SDL_SetWindowSize(gWindow, width, height);
 }
 
 int LWindow::getWidth()
