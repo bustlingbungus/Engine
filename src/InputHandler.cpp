@@ -144,7 +144,7 @@ Vector2Int InputHandler::getMousePos() const
 Vector2 MousePosition(std::shared_ptr<Camera> cam) 
 {
     // get mouse camera on the window
-    Vector2 res = inputHandler.getMousePos(); 
+    Vector2 res = MouseWindowPosition(); 
 
     // convert to game space based on camera, if possible
     if (cam == nullptr) cam = GetObject<Camera>();
