@@ -14,14 +14,13 @@ int main()
     Init();
 
     SDL_Event e;
-    bool quit = false;
     // main window loop
     while (!quit)
     {
         // handle events
         while (SDL_PollEvent(&e) != 0)
         {
-            if (e.type == SDL_QUIT) quit = true;
+            if (e.type == SDL_QUIT) Exit();
             gWindow->handleEvent(e);
             inputHandler.getInput(e);
         }

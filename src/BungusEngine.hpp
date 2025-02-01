@@ -36,3 +36,7 @@
 
 /// @brief  declaration for user initialiser function
 void Init();
+
+inline bool quit = false;
+/* Closes the window */
+inline void Exit() { quit = true; }
