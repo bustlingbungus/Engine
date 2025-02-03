@@ -20,7 +20,9 @@ void SetWindowTitle(std::string title);
 
 void ToggleFullscreen();
 
-void SetWindowSize(int width, int height, bool changeResolution = true);
+void SetWindowSize(int width, int height, bool changeResolution = true, int x = SDL_WINDOWPOS_CENTERED, int y = SDL_WINDOWPOS_CENTERED);
 
 Math::Vector2Int GetWindowDimensions();
 Math::Vector2Int GetWindowResolution();
+
+void SetWindowPosition(int x = SDL_WINDOWPOS_CENTERED, int y = SDL_WINDOWPOS_CENTERED);

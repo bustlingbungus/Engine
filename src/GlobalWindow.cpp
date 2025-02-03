@@ -14,8 +14,9 @@ void ToggleFullscreen() {
     gWindow->toggleFullscreen();
 }
 
-void SetWindowSize(int width, int height, bool changeResolution) {
+void SetWindowSize(int width, int height, bool changeResolution, int x, int y) {
     gWindow->setDimensions(width, height, !changeResolution);
+    gWindow->setPosition(x, y);
     // auto sc = GetCurrentScene();
     // if (sc!=nullptr) EnterScene(sc->name);
 }
@@ -27,4 +28,8 @@ Math::Vector2Int GetWindowDimensions() {
 Math::Vector2Int GetWindowResolution() {
     Vector2 sc(gWindow->getScaleX(), gWindow->getScaleY());
     return Vector2(gWindow->getWidth(), gWindow->getHeight())|sc;
+}
+
+void SetWindowPosition(int x, int y) {
+    gWindow->setPosition(x, y);
 }

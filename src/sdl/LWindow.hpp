@@ -44,6 +44,8 @@ public:
 
   /* changes window dimensions */
   void setDimensions(int width, int height, bool maintainResolution = false);
+  /* Sets the position of the window's origin on the monitor. leave as defaults for the window to be centred */
+  void setPosition(int x = SDL_WINDOWPOS_CENTERED, int y = SDL_WINDOWPOS_CENTERED);
 
   /* Initialises variables */
   LWindow(int width = 1280, int height = 720, std::string name = "Window");

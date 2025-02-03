@@ -182,6 +182,11 @@ void LWindow::setDimensions(int width, int height, bool maintainResolution)
   SDL_SetWindowSize(gWindow, width, height);
 }
 
+void LWindow::setPosition(int x, int y)
+{
+  SDL_SetWindowPosition(gWindow, x, y);
+}
+
 int LWindow::getWidth()
 {
   return wWidth;
